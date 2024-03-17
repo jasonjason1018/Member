@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MemberController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+
+$uri = explode('/', request()->path());
+$path = $uri[0] == ''?request()->path():$uri[0];
+$param = isset($uri[1])?$uri[1]:'';
+
+Route::prefix('/')->group(function () use ($path, $param) {
+    Route::get('/', [MemberController::class, 'redirect']);
+    Route::any("$path/{param?}", [MemberController::class, $path]);
 });
